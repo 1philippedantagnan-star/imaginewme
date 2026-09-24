@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catálogo</title>
+  <meta name="description" content="Catálogo de ropa y accesorios de reventa. Piezas únicas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="contenedor cabecera__fila">
+      <div>
+        <h1 class="marca" id="nombre-tienda"></h1>
+        <p class="eslogan" id="eslogan"></p>
+      </div>
+      <nav class="redes" id="redes"></nav>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <section class="controles" aria-label="Filtros">
+      <input id="buscar" type="search" placeholder="Buscar prenda, marca…" aria-label="Buscar">
+      <div class="controles__selects">
+        <select id="filtro-talla" aria-label="Talla"><option value="">Todas las tallas</option></select>
+        <select id="orden" aria-label="Ordenar">
+          <option value="nuevos">Más nuevos</option>
+          <option value="precio-asc">Precio: menor a mayor</option>
+          <option value="precio-desc">Precio: mayor a menor</option>
+        </select>
+      </div>
+      <div class="chips" id="categorias" role="group" aria-label="Categorías"></div>
+      <label class="interruptor">
+        <input type="checkbox" id="ocultar-vendidos" checked>
+        <span>Ocultar vendidos</span>
+      </label>
+    </section>
+
+    <p class="conteo" id="conteo" aria-live="polite"></p>
+    <section class="rejilla" id="rejilla"></section>
+    <p class="vacio" id="vacio" hidden>No encontramos productos con esos filtros.</p>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <p>Todas las piezas son únicas y de segunda mano. Aparta por WhatsApp.</p>
+      <p class="pie__peq">© <span id="anio"></span> <span id="nombre-pie"></span></p>
+    </div>
+  </footer>
+
+  <dialog class="modal" id="modal">
+    <button class="modal__cerrar" id="cerrar" aria-label="Cerrar">×</button>
+    <div class="modal__cuerpo">
+      <div class="galeria">
+        <div class="galeria__principal" id="foto-principal"></div>
+        <div class="galeria__miniaturas" id="miniaturas"></div>
+      </div>
+      <div class="detalle" id="detalle"></div>
+    </div>
+  </dialog>
+
+  <script src="productos.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+Pon aquí las fotos de los productos.
+
+Recomendado:
+- Formato .jpg o .webp, proporción vertical 4:5 (ej. 1080x1350 px).
+- Nombre: <id>-<número>.jpg  → p001-1.jpg, p001-2.jpg …
+- Pesa menos de ~300 KB cada una para que el sitio cargue rápido
+  (puedes comprimirlas en https://squoosh.app).
+
+Si una foto no existe, el catálogo muestra un marcador con la inicial del producto.

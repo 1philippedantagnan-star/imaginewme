@@ -10,8 +10,6 @@ const TIENDA = {
   // Número de WhatsApp con código de país, sin "+" ni espacios (ej. 56912345678)
   whatsapp: "56962694268",
   instagram: "eurodrip_chile", // sin @. Vacío = oculto.
-  // Muestra "Últimos pares" cuando el stock total del modelo es igual o menor a esto
-  avisoPocasUnidades: 1,
 };
 
 // Datos opcionales por modelo, usando el ID del Excel.

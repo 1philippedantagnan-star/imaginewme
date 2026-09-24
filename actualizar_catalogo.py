@@ -136,6 +136,7 @@ def main():
     contenido = (
         "// ARCHIVO GENERADO por actualizar_catalogo.py — no lo edites a mano.\n"
         f"// Origen: {Path(sys.argv[1]).name} · {datetime.now():%Y-%m-%d %H:%M}\n"
+        f"const ACTUALIZADO = \"{datetime.now():%d-%m-%Y}\";\n"
         "const INVENTARIO = [\n"
         + "".join(f"  {json.dumps(p, ensure_ascii=False)},\n" for p in lista)
         + "];\n"

@@ -24,8 +24,8 @@ Guarda la foto de cada modelo como `img/<ID>.jpg` (ver `img/LEEME.txt`).
 
 ## Qué hace el catálogo
 - Muestra solo tallas con stock; los modelos sin stock salen como **Agotado** (ocultos por defecto).
-- Filtros por marca y talla, búsqueda (ignora acentos) y orden por novedad, precio o nombre.
-- Aviso de **Último par** cuando queda una unidad (configurable).
+- Filtros por talla y marca; los modelos más nuevos aparecen primero.
+- Aviso de **Último par** cuando queda una unidad.
 - En la ficha el cliente elige talla y el botón abre WhatsApp con el mensaje listo
   ("Me interesan las Jordan Retro 4 Oreo en talla 42 ($85.000)…").
 - Enlace directo a cada modelo: `tusitio.com/#<ID>`.

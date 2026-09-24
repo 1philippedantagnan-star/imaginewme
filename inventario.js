@@ -1,5 +1,6 @@
 // ARCHIVO GENERADO por actualizar_catalogo.py — no lo edites a mano.
-// Origen: c393e0ff-inventario_respaldo_2026-09-24_2.xlsx · 2026-09-24 22:08
+// Origen: inv.xlsx · 2026-09-24 22:47
+const ACTUALIZADO = "24-09-2026";
 const INVENTARIO = [
   {"id": "p1790168211393", "marca": "Jordan", "modelo": "Retro Ring Gris", "precio": 85000, "tallas": [{"talla": "40", "stock": 1}, {"talla": "42", "stock": 1}]},
   {"id": "p1790168255743", "marca": "Jordan", "modelo": "Retro 3 Tinker Negra", "precio": 85000, "tallas": [{"talla": "44", "stock": 2}]},

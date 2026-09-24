@@ -4,7 +4,7 @@
 // ============================================================
 
 const TIENDA = {
-  nombre: "Eurodrip",
+  nombre: "EURODRIP",
   eslogan: "Zapatillas · Chile",
   moneda: "$",
   // Número de WhatsApp con código de país, sin "+" ni espacios (ej. 56912345678)

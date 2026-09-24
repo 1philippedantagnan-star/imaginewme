@@ -4,12 +4,12 @@
 // ============================================================
 
 const TIENDA = {
-  nombre: "Imagine W Me",
-  eslogan: "Zapatillas · stock disponible",
+  nombre: "Eurodrip",
+  eslogan: "Zapatillas · Chile",
   moneda: "$",
   // Número de WhatsApp con código de país, sin "+" ni espacios (ej. 56912345678)
-  whatsapp: "",
-  instagram: "", // ej. "imaginewme" (sin @). Vacío = oculto.
+  whatsapp: "56962694268",
+  instagram: "eurodrip_chile", // sin @. Vacío = oculto.
   // Muestra "Últimos pares" cuando el stock total del modelo es igual o menor a esto
   avisoPocasUnidades: 1,
 };

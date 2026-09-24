@@ -1,4 +1,4 @@
-# Catálogo web — Imagine W Me
+# Catálogo web — Eurodrip
 
 Catálogo de zapatillas generado desde el respaldo de inventario en Excel. Son archivos HTML/CSS/JS
 estáticos: no necesita servidor ni base de datos.

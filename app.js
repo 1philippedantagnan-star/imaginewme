@@ -23,6 +23,9 @@ let fMarca = "", fTalla = "";
     ? `<img class="logo" src="${esc(TIENDA.logo)}" alt="${esc(n)}">`
     : /^[A-Z]+$/.test(n) && n.length > 5 ? `${esc(n.slice(0, k))}<span>${esc(n.slice(k))}</span>` : esc(n);
   $("#eslogan").textContent = TIENDA.eslogan;
+  $("#pago").textContent = TIENDA.pago || "";
+  $("#pago").hidden = !TIENDA.pago;
+  if (TIENDA.logo) document.querySelector("header").classList.add("con-logo");
   $("#stamp").textContent = "Stock al " + ACTUALIZADO;
   const links = [];
   if (IG) links.push(`<a href="https://instagram.com/${encodeURIComponent(IG)}" target="_blank" rel="noopener">@${esc(IG)}</a>`);
@@ -79,6 +82,7 @@ function open(id) {
           <span class="lbl">Elige tu talla</span>
           <div class="sizes">${p.tallas.map(([t, n]) => `<button data-s="${esc(t)}" ${n > 0 ? "" : "disabled"} aria-pressed="${t === talla}">${esc(t)}</button>`).join("")}</div>
         </div>
+        ${TIENDA.pago ? `<p class="hint">${esc(TIENDA.pago)}.</p>` : ""}
         <p class="hint">${talla ? (st === 1 ? `<span class="low">Queda 1 par en talla ${esc(talla)}.</span>` : `Talla ${esc(talla)} disponible.`) : "Elige una talla para que tu mensaje salga completo."}</p>
         <div class="cta">
           ${WA ? `<a class="btn" href="https://wa.me/${encodeURIComponent(WA)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Pedir por WhatsApp</a>` : ""}

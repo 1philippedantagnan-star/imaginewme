@@ -23,7 +23,13 @@ header{padding-block:28px 18px}
 .brand{font-family:var(--display);font-stretch:62%;font-weight:900;text-transform:uppercase;
   font-size:clamp(3.2rem,15vw,7.5rem);line-height:.82;letter-spacing:-.01em;margin:0}
 .brand span{color:var(--acc)}
-.brand .logo{display:block;height:clamp(72px,18vw,128px);width:auto;max-width:100%;border-radius:12px}
+.brand .logo{display:block;width:clamp(120px,34vw,148px);height:auto;max-width:100%;border-radius:50%}
+header.con-logo{display:flex;flex-wrap:wrap;align-items:center;gap:14px clamp(14px,4vw,28px)}
+header.con-logo .brand{flex:none}
+header.con-logo .meta{margin-top:8px}
+.head-info{flex:1 1 280px;min-width:0}
+.pago{margin:0;font-family:var(--display);font-stretch:75%;font-weight:800;text-transform:uppercase;
+  font-size:clamp(1.15rem,4.5vw,1.9rem);line-height:1.05;letter-spacing:.01em}
 .meta{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-top:14px;
   font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
 .meta a{color:var(--ink);text-decoration:none;border-bottom:1.5px solid var(--acc);padding-bottom:1px}

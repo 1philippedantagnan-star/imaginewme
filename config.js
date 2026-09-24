@@ -10,6 +10,8 @@ const TIENDA = {
   // Número de WhatsApp con código de país, sin "+" ni espacios (ej. 56912345678)
   whatsapp: "56962694268",
   instagram: "eurodrip_chile", // sin @. Vacío = oculto.
+  // Ruta del logo (ej. "img/logo.png"). Vacío = se muestra el nombre en texto.
+  logo: "",
 };
 
 // Datos opcionales por modelo, usando el ID del Excel.

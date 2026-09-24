@@ -19,7 +19,9 @@ let fMarca = "", fTalla = "";
 // Cabecera y contacto desde config.js
 (() => {
   const n = TIENDA.nombre, k = Math.ceil(n.length / 2);
-  $("#brand").innerHTML = /^[A-Z]+$/.test(n) && n.length > 5 ? `${esc(n.slice(0, k))}<span>${esc(n.slice(k))}</span>` : esc(n);
+  $("#brand").innerHTML = TIENDA.logo
+    ? `<img class="logo" src="${esc(TIENDA.logo)}" alt="${esc(n)}">`
+    : /^[A-Z]+$/.test(n) && n.length > 5 ? `${esc(n.slice(0, k))}<span>${esc(n.slice(k))}</span>` : esc(n);
   $("#eslogan").textContent = TIENDA.eslogan;
   $("#stamp").textContent = "Stock al " + ACTUALIZADO;
   const links = [];

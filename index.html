@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Catálogo</title>
-  <meta name="description" content="Catálogo de ropa y accesorios de reventa. Piezas únicas.">
+  <meta name="description" content="Catálogo de zapatillas con stock y tallas disponibles.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,19 +23,20 @@
 
   <main class="contenedor">
     <section class="controles" aria-label="Filtros">
-      <input id="buscar" type="search" placeholder="Buscar prenda, marca…" aria-label="Buscar">
+      <input id="buscar" type="search" placeholder="Buscar modelo o marca…" aria-label="Buscar">
       <div class="controles__selects">
         <select id="filtro-talla" aria-label="Talla"><option value="">Todas las tallas</option></select>
         <select id="orden" aria-label="Ordenar">
           <option value="nuevos">Más nuevos</option>
           <option value="precio-asc">Precio: menor a mayor</option>
           <option value="precio-desc">Precio: mayor a menor</option>
+          <option value="nombre">Nombre (A–Z)</option>
         </select>
       </div>
-      <div class="chips" id="categorias" role="group" aria-label="Categorías"></div>
+      <div class="chips" id="marcas" role="group" aria-label="Marcas"></div>
       <label class="interruptor">
-        <input type="checkbox" id="ocultar-vendidos" checked>
-        <span>Ocultar vendidos</span>
+        <input type="checkbox" id="ocultar-agotados" checked>
+        <span>Ocultar agotados</span>
       </label>
     </section>
 
@@ -46,7 +47,7 @@
 
   <footer class="pie">
     <div class="contenedor">
-      <p>Todas las piezas son únicas y de segunda mano. Aparta por WhatsApp.</p>
+      <p>Stock sujeto a disponibilidad. Consulta tu talla antes de pagar.</p>
       <p class="pie__peq">© <span id="anio"></span> <span id="nombre-pie"></span></p>
     </div>
   </footer>
@@ -62,7 +63,8 @@
     </div>
   </dialog>
 
-  <script src="productos.js"></script>
+  <script src="config.js"></script>
+  <script src="inventario.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

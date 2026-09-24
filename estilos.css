@@ -85,19 +85,18 @@ button, input, select { font: inherit; color: inherit; }
 .tarjeta:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
 .tarjeta__foto { position: relative; aspect-ratio: 4 / 5; background: var(--borde); overflow: hidden; }
 .tarjeta__foto img { width: 100%; height: 100%; object-fit: cover; }
-.tarjeta--vendido .tarjeta__foto img, .tarjeta--vendido .marcador { filter: grayscale(1); opacity: .55; }
+.tarjeta--agotado .tarjeta__foto img, .tarjeta--agotado .marcador { filter: grayscale(1); opacity: .55; }
 .etiqueta {
   position: absolute; top: 10px; left: 10px; padding: 3px 9px; border-radius: 999px;
   font-size: .72rem; font-weight: 600; background: var(--superficie); color: var(--texto);
 }
-.etiqueta--vendido { background: var(--texto); color: var(--fondo); }
-.etiqueta--descuento { left: auto; right: 10px; background: var(--acento); color: var(--acento-texto); }
+.etiqueta--agotado { background: var(--texto); color: var(--fondo); }
+.etiqueta--pocas { background: var(--acento); color: var(--acento-texto); }
 .tarjeta__info { padding: 12px 14px 16px; display: grid; gap: 2px; }
 .tarjeta__marca { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--suave); }
 .tarjeta__nombre { font-weight: 500; line-height: 1.3; }
 .tarjeta__meta { font-size: .82rem; color: var(--suave); }
 .precio { font-weight: 600; margin-top: 4px; }
-.precio s { color: var(--suave); font-weight: 400; font-size: .85em; margin-left: 6px; }
 
 .marcador {
   width: 100%; height: 100%; display: grid; place-items: center;
@@ -139,6 +138,18 @@ button, input, select { font: inherit; color: inherit; }
   text-decoration: none; font-weight: 600; margin-top: 8px;
 }
 .boton:hover { filter: brightness(1.05); }
+.boton--secundario { background: transparent; color: var(--texto); border: 1px solid var(--borde); }
+.detalle__acciones { display: grid; gap: 8px; }
+.detalle__acciones .boton { margin-top: 0; }
+.detalle__rotulo { font-size: .85rem; color: var(--suave); margin: 4px 0 8px !important; }
+.tallas { display: flex; flex-wrap: wrap; gap: 8px; }
+.talla {
+  min-width: 52px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--borde);
+  background: var(--superficie); cursor: pointer; font-weight: 500;
+}
+.talla:hover:not([disabled]) { border-color: var(--texto); }
+.talla[aria-pressed=true] { background: var(--texto); color: var(--fondo); border-color: var(--texto); }
+.talla[disabled] { color: var(--suave); text-decoration: line-through; opacity: .5; cursor: not-allowed; }
 .boton[aria-disabled=true] { background: var(--borde); color: var(--suave); pointer-events: none; }
 
 /* Pie */

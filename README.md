@@ -1,26 +1,37 @@
 # Catálogo web — Imagine W Me
 
-Catálogo estático para una tienda de reventa. No necesita servidor, base de datos ni instalación: son archivos HTML/CSS/JS.
+Catálogo de zapatillas generado desde el respaldo de inventario en Excel. Son archivos HTML/CSS/JS
+estáticos: no necesita servidor ni base de datos.
 
-## Cómo verlo
-Abre `index.html` en tu navegador (doble clic).
+## Actualizar el stock
+Cada vez que exportes un respaldo nuevo:
 
-## Cómo editarlo
-Todo el contenido está en **`productos.js`**:
+```bash
+python3 actualizar_catalogo.py inventario_respaldo_AAAA-MM-DD.xlsx
+```
 
-1. **Datos de la tienda** (`TIENDA`): nombre, eslogan, moneda, número de WhatsApp (con código de país, sin `+`) e Instagram.
-2. **Productos** (`PRODUCTOS`): copia un bloque `{ ... }`, cambia el `id` y los datos.
-   - Para marcar algo como vendido: `vendido: true` (se muestra en gris, al final, o se oculta).
-   - Para mostrar descuento: agrega `precioAntes`.
-3. **Fotos**: guárdalas en `img/` con el nombre que pusiste en `fotos` (ver `img/LEEME.txt`).
+Esto reescribe `inventario.js` con modelos, precios, tallas y stock. Usa la hoja **Inventario**
+(columnas ID, Marca, Modelo, Precio, Talla, Stock). **No se publican** la hoja *Pedidos*
+ni las columnas *Código* y *Notas*. El Excel en sí está excluido de git (`.gitignore`).
 
-## Qué incluye
-- Búsqueda (ignora acentos), filtro por categoría y talla, orden por novedad o precio.
-- Ficha de producto con galería de fotos.
-- Botón **"Lo quiero · WhatsApp"** con mensaje prellenado (producto, talla y precio).
-- Enlace directo a cada producto: `tusitio.com/#p001` (útil para compartir en redes).
-- Diseño adaptable a celular y modo oscuro automático.
+## Configurar
+En **`config.js`**:
+- `TIENDA`: nombre, eslogan, WhatsApp (con código de país, sin `+`), Instagram.
+- `EXTRAS`: por ID de modelo, fotos adicionales, descripción u `oculto: true`.
+
+## Fotos
+Guarda la foto de cada modelo como `img/<ID>.jpg` (ver `img/LEEME.txt`).
+
+## Qué hace el catálogo
+- Muestra solo tallas con stock; los modelos sin stock salen como **Agotado** (ocultos por defecto).
+- Filtros por marca y talla, búsqueda (ignora acentos) y orden por novedad, precio o nombre.
+- Aviso de **Último par** cuando queda una unidad (configurable).
+- En la ficha el cliente elige talla y el botón abre WhatsApp con el mensaje listo
+  ("Me interesan las Jordan Retro 4 Oreo en talla 42 ($85.000)…").
+- Enlace directo a cada modelo: `tusitio.com/#<ID>`.
+- Adaptado a celular y modo oscuro.
 
 ## Publicarlo gratis
-En GitHub: **Settings → Pages → Deploy from a branch → `main` / root**. Quedará en
-`https://<usuario>.github.io/imaginewme/`. También sirve Netlify o Vercel arrastrando la carpeta.
+GitHub: **Settings → Pages → Deploy from a branch → `main` / root**. Queda en
+`https://<usuario>.github.io/imaginewme/`. Luego, cada actualización de stock es:
+correr el script → commit → push.

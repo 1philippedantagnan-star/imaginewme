@@ -3,14 +3,33 @@
 
   const estado = {
     texto: "",
-    categoria: "",
+    marca: "",
     talla: "",
     orden: "nuevos",
-    ocultarVendidos: true,
+    ocultarAgotados: true,
   };
 
+  // ---------- Datos ----------
+  const stockTotal = (p) => p.tallas.reduce((n, t) => n + t.stock, 0);
+  const tallasDisponibles = (p) => p.tallas.filter((t) => t.stock > 0);
+
+  const PRODUCTOS = INVENTARIO
+    .map((p) => {
+      const extra = EXTRAS[p.id] || {};
+      return {
+        ...p,
+        nombre: p.modelo,
+        fotos: extra.fotos?.length ? extra.fotos : [`img/${p.id}.jpg`],
+        descripcion: extra.descripcion || "",
+        oculto: Boolean(extra.oculto),
+        agotado: stockTotal(p) === 0,
+      };
+    })
+    .filter((p) => !p.oculto);
+
+  // ---------- Utilidades ----------
   const formatoPrecio = (n) =>
-    `${TIENDA.moneda}${Number(n).toLocaleString("es-MX", { maximumFractionDigits: 2 })}`;
+    `${TIENDA.moneda}${Number(n).toLocaleString("es-CL", { maximumFractionDigits: 2 })}`;
 
   const normalizar = (s) =>
     String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/['’]/g, "");
@@ -18,19 +37,28 @@
   const escapar = (s) =>
     String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  // Imagen con marcador de respaldo si la foto no existe todavía
+  const clasificarTalla = (a, b) =>
+    parseFloat(a.replace(",", ".")) - parseFloat(b.replace(",", ".")) || a.localeCompare(b, "es", { numeric: true });
+
+  // Imagen con marcador de respaldo (ver listener de "error" más abajo)
   function imagen(src, producto, cargaDiferida = true) {
-    const inicial = escapar((producto.nombre || "?").trim()[0].toUpperCase());
+    const inicial = escapar((producto.marca || producto.nombre || "?").trim()[0].toUpperCase());
     if (!src) return `<div class="marcador">${inicial}</div>`;
-    return `<img src="${escapar(src)}" alt="${escapar(producto.nombre)}" data-inicial="${inicial}" ${cargaDiferida ? 'loading="lazy"' : ""}>`;
+    return `<img src="${escapar(src)}" alt="${escapar(`${producto.marca} ${producto.nombre}`)}" data-inicial="${inicial}" ${cargaDiferida ? 'loading="lazy"' : ""}>`;
   }
 
-  const descuento = (p) =>
-    p.precioAntes > p.precio ? Math.round((1 - p.precio / p.precioAntes) * 100) : 0;
+  const mensaje = (p, talla) =>
+    `¡Hola! Me interesan las ${p.marca} ${p.nombre}${talla ? ` en talla ${talla}` : ""} (${formatoPrecio(p.precio)}). ¿Están disponibles?`;
 
-  function enlaceWhatsApp(p) {
-    const msg = `¡Hola! Me interesa "${p.nombre}"${p.talla ? ` (talla ${p.talla})` : ""} de ${formatoPrecio(p.precio)}. ¿Sigue disponible?`;
-    return `https://wa.me/${TIENDA.whatsapp}?text=${encodeURIComponent(msg)}`;
+  function botonesContacto(p, talla) {
+    const botones = [];
+    if (TIENDA.whatsapp)
+      botones.push(`<a class="boton" href="https://wa.me/${encodeURIComponent(TIENDA.whatsapp)}?text=${encodeURIComponent(mensaje(p, talla))}" target="_blank" rel="noopener">Pedir por WhatsApp</a>`);
+    if (TIENDA.instagram)
+      botones.push(`<a class="boton ${botones.length ? "boton--secundario" : ""}" href="https://ig.me/m/${encodeURIComponent(TIENDA.instagram)}" target="_blank" rel="noopener">Escribir por Instagram</a>`);
+    if (!botones.length)
+      botones.push(`<a class="boton" href="https://wa.me/?text=${encodeURIComponent(mensaje(p, talla))}" target="_blank" rel="noopener">Consultar</a>`);
+    return botones.join("");
   }
 
   // ---------- Cabecera y controles ----------
@@ -43,77 +71,71 @@
 
     const redes = [];
     if (TIENDA.instagram)
-      redes.push(`<a href="https://instagram.com/${escapar(TIENDA.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
+      redes.push(`<a href="https://instagram.com/${encodeURIComponent(TIENDA.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
     if (TIENDA.whatsapp)
-      redes.push(`<a href="https://wa.me/${escapar(TIENDA.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>`);
+      redes.push(`<a href="https://wa.me/${encodeURIComponent(TIENDA.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>`);
     $("#redes").innerHTML = redes.join("");
   }
 
   function iniciarControles() {
-    const categorias = [...new Set(PRODUCTOS.map((p) => p.categoria).filter(Boolean))].sort();
-    $("#categorias").innerHTML = ["", ...categorias]
-      .map((c) => `<button class="chip" data-cat="${escapar(c)}" aria-pressed="${c === ""}">${c ? escapar(c) : "Todo"}</button>`)
+    const conteoMarcas = {};
+    PRODUCTOS.forEach((p) => { conteoMarcas[p.marca] = (conteoMarcas[p.marca] || 0) + 1; });
+    const marcas = Object.keys(conteoMarcas).filter(Boolean).sort((a, b) => conteoMarcas[b] - conteoMarcas[a] || a.localeCompare(b));
+    $("#marcas").innerHTML = ["", ...marcas]
+      .map((m) => `<button class="chip" data-marca="${escapar(m)}" aria-pressed="${m === ""}">${m ? escapar(m) : "Todo"}</button>`)
       .join("");
-    $("#categorias").addEventListener("click", (e) => {
+    $("#marcas").addEventListener("click", (e) => {
       const chip = e.target.closest(".chip");
       if (!chip) return;
-      estado.categoria = chip.dataset.cat;
-      document.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", b === chip));
+      estado.marca = chip.dataset.marca;
+      document.querySelectorAll("#marcas .chip").forEach((b) => b.setAttribute("aria-pressed", b === chip));
       pintar();
     });
 
-    const tallas = [...new Set(PRODUCTOS.map((p) => p.talla).filter(Boolean))];
-    const ordenTallas = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-    tallas.sort((a, b) => {
-      const ia = ordenTallas.indexOf(a), ib = ordenTallas.indexOf(b);
-      if (ia > -1 || ib > -1) return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
-      return a.localeCompare(b, "es", { numeric: true });
-    });
+    const tallas = [...new Set(PRODUCTOS.flatMap((p) => tallasDisponibles(p).map((t) => t.talla)))].sort(clasificarTalla);
     $("#filtro-talla").insertAdjacentHTML("beforeend", tallas.map((t) => `<option>${escapar(t)}</option>`).join(""));
 
     $("#buscar").addEventListener("input", (e) => { estado.texto = normalizar(e.target.value); pintar(); });
     $("#filtro-talla").addEventListener("change", (e) => { estado.talla = e.target.value; pintar(); });
     $("#orden").addEventListener("change", (e) => { estado.orden = e.target.value; pintar(); });
-    $("#ocultar-vendidos").addEventListener("change", (e) => { estado.ocultarVendidos = e.target.checked; pintar(); });
+    $("#ocultar-agotados").addEventListener("change", (e) => { estado.ocultarAgotados = e.target.checked; pintar(); });
   }
 
   // ---------- Listado ----------
   function filtrar() {
     const lista = PRODUCTOS.filter((p) => {
-      if (estado.ocultarVendidos && p.vendido) return false;
-      if (estado.categoria && p.categoria !== estado.categoria) return false;
-      if (estado.talla && p.talla !== estado.talla) return false;
-      if (estado.texto) {
-        const pajar = normalizar([p.nombre, p.marca, p.categoria, p.descripcion].join(" "));
-        if (!pajar.includes(estado.texto)) return false;
-      }
+      if (estado.ocultarAgotados && p.agotado) return false;
+      if (estado.marca && p.marca !== estado.marca) return false;
+      if (estado.talla && !tallasDisponibles(p).some((t) => t.talla === estado.talla)) return false;
+      if (estado.texto && !normalizar(`${p.marca} ${p.nombre} ${p.descripcion}`).includes(estado.texto)) return false;
       return true;
     });
 
     const orden = {
-      "nuevos": (a, b) => String(b.agregado || "").localeCompare(String(a.agregado || "")),
+      // Los IDs son marcas de tiempo (p<milisegundos>), así que el mayor es el más reciente
+      "nuevos": (a, b) => b.id.localeCompare(a.id, "en", { numeric: true }),
       "precio-asc": (a, b) => a.precio - b.precio,
       "precio-desc": (a, b) => b.precio - a.precio,
+      "nombre": (a, b) => `${a.marca} ${a.nombre}`.localeCompare(`${b.marca} ${b.nombre}`, "es", { numeric: true }),
     }[estado.orden];
-    // Los vendidos siempre al final
-    return lista.sort((a, b) => (a.vendido - b.vendido) || orden(a, b));
+    return lista.sort((a, b) => (a.agotado - b.agotado) || orden(a, b));
   }
 
   function tarjeta(p) {
-    const d = descuento(p);
-    const meta = [p.talla && `Talla ${p.talla}`, p.estado].filter(Boolean).map(escapar).join(" · ");
+    const disponibles = tallasDisponibles(p).map((t) => t.talla);
+    const pocas = !p.agotado && stockTotal(p) <= TIENDA.avisoPocasUnidades;
     return `
-      <button class="tarjeta ${p.vendido ? "tarjeta--vendido" : ""}" data-id="${escapar(p.id)}">
+      <button class="tarjeta ${p.agotado ? "tarjeta--agotado" : ""}" data-id="${escapar(p.id)}">
         <div class="tarjeta__foto">
-          ${imagen(p.fotos?.[0], p)}
-          ${p.vendido ? '<span class="etiqueta etiqueta--vendido">Vendido</span>' : ""}
-          ${!p.vendido && d ? `<span class="etiqueta etiqueta--descuento">−${d}%</span>` : ""}
+          ${imagen(p.fotos[0], p)}
+          ${p.agotado ? '<span class="etiqueta etiqueta--agotado">Agotado</span>' : ""}
+          ${pocas ? `<span class="etiqueta etiqueta--pocas">${stockTotal(p) === 1 ? "Último par" : "Últimos pares"}</span>` : ""}
         </div>
         <div class="tarjeta__info">
-          ${p.marca ? `<span class="tarjeta__marca">${escapar(p.marca)}</span>` : ""}
+          <span class="tarjeta__marca">${escapar(p.marca)}</span>
           <span class="tarjeta__nombre">${escapar(p.nombre)}</span>
-          <span class="tarjeta__meta">${meta}</span>
-          <span class="precio">${formatoPrecio(p.precio)}${d ? `<s>${formatoPrecio(p.precioAntes)}</s>` : ""}</span>
+          <span class="tarjeta__meta">${disponibles.length ? `${disponibles.length === 1 ? "Talla" : "Tallas"} ${disponibles.map(escapar).join(" · ")}` : "Sin tallas disponibles"}</span>
+          <span class="precio">${formatoPrecio(p.precio)}</span>
         </div>
       </button>`;
   }
@@ -122,22 +144,21 @@
     const lista = filtrar();
     $("#rejilla").innerHTML = lista.map(tarjeta).join("");
     $("#vacio").hidden = lista.length > 0;
-    const disponibles = lista.filter((p) => !p.vendido).length;
-    $("#conteo").textContent = `${disponibles} ${disponibles === 1 ? "pieza disponible" : "piezas disponibles"}`;
+    const disponibles = lista.filter((p) => !p.agotado).length;
+    $("#conteo").textContent = `${disponibles} ${disponibles === 1 ? "modelo disponible" : "modelos disponibles"}`;
   }
 
   // ---------- Detalle ----------
   function abrir(id, actualizarUrl = true) {
     const p = PRODUCTOS.find((x) => x.id === id);
     if (!p) return;
-    const fotos = p.fotos?.length ? p.fotos : [null];
 
     const mostrarFoto = (i) => {
-      $("#foto-principal").innerHTML = imagen(fotos[i], p, false);
+      $("#foto-principal").innerHTML = imagen(p.fotos[i], p, false);
       document.querySelectorAll("#miniaturas button").forEach((b, j) => b.setAttribute("aria-current", i === j));
     };
-    $("#miniaturas").innerHTML = fotos.length > 1
-      ? fotos.map((f, i) => `<button data-i="${i}" aria-label="Foto ${i + 1}">${imagen(f, p)}</button>`).join("")
+    $("#miniaturas").innerHTML = p.fotos.length > 1
+      ? p.fotos.map((f, i) => `<button data-i="${i}" aria-label="Foto ${i + 1}">${imagen(f, p)}</button>`).join("")
       : "";
     $("#miniaturas").onclick = (e) => {
       const b = e.target.closest("button");
@@ -145,20 +166,38 @@
     };
     mostrarFoto(0);
 
-    const d = descuento(p);
-    const datos = [
-      ["Marca", p.marca], ["Categoría", p.categoria], ["Talla", p.talla], ["Estado", p.estado],
-    ].filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${escapar(v)}</dd>`).join("");
+    // Si hay un filtro de talla activo y está disponible, viene preseleccionada
+    let talla = tallasDisponibles(p).some((t) => t.talla === estado.talla) ? estado.talla : "";
 
     $("#detalle").innerHTML = `
+      <span class="tarjeta__marca">${escapar(p.marca)}</span>
       <h2>${escapar(p.nombre)}</h2>
-      <p class="precio">${formatoPrecio(p.precio)}${d ? `<s>${formatoPrecio(p.precioAntes)}</s>` : ""}</p>
-      <dl class="datos">${datos}</dl>
+      <p class="precio">${formatoPrecio(p.precio)}</p>
       ${p.descripcion ? `<p>${escapar(p.descripcion)}</p>` : ""}
-      ${p.vendido
-        ? '<a class="boton" aria-disabled="true">Vendido</a>'
-        : `<a class="boton" href="${enlaceWhatsApp(p)}" target="_blank" rel="noopener">Lo quiero · WhatsApp</a>`}
+      <div>
+        <p class="detalle__rotulo">${p.agotado ? "Agotado en todas las tallas" : "Elige tu talla"}</p>
+        <div class="tallas" role="group" aria-label="Tallas">
+          ${p.tallas.map((t) => `
+            <button class="talla" data-talla="${escapar(t.talla)}" ${t.stock > 0 ? "" : "disabled"}
+              aria-pressed="${t.talla === talla}">${escapar(t.talla)}</button>`).join("")}
+        </div>
+      </div>
+      <div class="detalle__acciones" id="acciones"></div>
     `;
+
+    const pintarAcciones = () => {
+      $("#acciones").innerHTML = p.agotado
+        ? '<a class="boton" aria-disabled="true">Agotado</a>'
+        : botonesContacto(p, talla);
+    };
+    $("#detalle .tallas").onclick = (e) => {
+      const b = e.target.closest(".talla:not([disabled])");
+      if (!b) return;
+      talla = talla === b.dataset.talla ? "" : b.dataset.talla;
+      document.querySelectorAll("#detalle .talla").forEach((x) => x.setAttribute("aria-pressed", x.dataset.talla === talla));
+      pintarAcciones();
+    };
+    pintarAcciones();
 
     if (actualizarUrl) history.replaceState(null, "", `#${encodeURIComponent(p.id)}`);
     if (!$("#modal").open) $("#modal").showModal();
@@ -174,7 +213,7 @@
     modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
     modal.addEventListener("close", () => history.replaceState(null, "", location.pathname + location.search));
 
-    // Enlace directo a un producto: tusitio.com/#p001
+    // Enlace directo a un modelo: tusitio.com/#p1790168211393
     const id = decodeURIComponent(location.hash.slice(1));
     if (id) abrir(id, false);
   }

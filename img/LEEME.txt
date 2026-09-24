@@ -1,9 +1,12 @@
-Pon aquí las fotos de los productos.
+Pon aquí las fotos de los modelos.
+
+Nombre de la foto = ID del modelo en el Excel (columna "ID"):
+    img/p1790168211393.jpg   → Jordan Retro Ring Gris
+
+Si quieres varias fotos o usar otros nombres, decláralas en config.js (EXTRAS).
 
 Recomendado:
-- Formato .jpg o .webp, proporción vertical 4:5 (ej. 1080x1350 px).
-- Nombre: <id>-<número>.jpg  → p001-1.jpg, p001-2.jpg …
-- Pesa menos de ~300 KB cada una para que el sitio cargue rápido
-  (puedes comprimirlas en https://squoosh.app).
+- Formato .jpg, proporción vertical 4:5 (ej. 1080x1350 px).
+- Menos de ~300 KB cada una (puedes comprimirlas en https://squoosh.app).
 
-Si una foto no existe, el catálogo muestra un marcador con la inicial del producto.
+Si falta una foto, el catálogo muestra la inicial de la marca.

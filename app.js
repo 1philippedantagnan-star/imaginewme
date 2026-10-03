@@ -2,8 +2,10 @@ const WA = TIENDA.whatsapp, IG = TIENDA.instagram;
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const clp = n => "$" + Math.round(n).toLocaleString("es-CL");
+const clp = n => (TIENDA.moneda || "$") + Math.round(n).toLocaleString("es-CL");
 const num = t => parseFloat(String(t).replace(",", "."));
+// "Jordan" + "Retro 4 Oreo" → "Jordan Retro 4 Oreo", sin repetir la marca si el modelo ya la trae
+const nombre = p => p.modelo.toLowerCase().startsWith(p.marca.toLowerCase()) ? p.modelo : `${p.marca} ${p.modelo}`;
 
 const P = INVENTARIO.filter(p => !(EXTRAS[p.id] || {}).oculto).map(({ id, marca, modelo, precio, tallas: ts }) => {
   const tallas = ts.map(t => [t.talla, t.stock]);
@@ -47,7 +49,7 @@ function chips() {
 }
 
 // Si la foto no existe se ve la marca (la imagen se elimina al fallar)
-const pic = (p, big) => `<div class="pic"><span class="mark">${esc(p.marca)}</span><img src="${esc(p.foto)}" alt="${esc(p.marca + " " + p.modelo)}" loading="lazy" onerror="this.remove()">${!big && p.total === 1 ? '<span class="tag">Último par</span>' : ""}</div>`;
+const pic = (p, big) => `<span class="pic"><span class="mark">${esc(p.marca)}</span><img src="${esc(p.foto)}" alt="${esc(nombre(p))}" loading="lazy" onerror="this.remove()">${!big && p.total === 1 ? '<span class="tag">Último par</span>' : ""}</span>`;
 
 function render() {
   const r = P.filter(p => (!fMarca || p.marca === fMarca) && (!fTalla || p.disp.includes(fTalla)));
@@ -69,13 +71,13 @@ function open(id) {
   const p = P.find(x => x.id === id); if (!p) return;
   let talla = p.disp.includes(fTalla) ? fTalla : (p.disp.length === 1 ? p.disp[0] : "");
   const draw = () => {
-    const msg = `¡Hola! Me interesan las ${p.marca} ${p.modelo}${talla ? " en talla " + talla : ""} (${clp(p.precio)}). ¿Están disponibles?`;
+    const msg = `¡Hola! Me interesan las ${nombre(p)}${talla ? " en talla " + talla : ""} (${clp(p.precio)}). ¿Están disponibles?`;
     const st = talla ? p.tallas.find(([t]) => t === talla)[1] : 0;
     $("#sheet").innerHTML = `
       ${pic(p, true)}
       <div class="det">
         <span class="mk">${esc(p.marca)}</span>
-        <h2>${esc(p.modelo)}</h2>
+        <h2 id="dlg-t">${esc(p.modelo)}</h2>
         <p class="pr">${clp(p.precio)}</p>
         ${p.descripcion ? `<p class="hint">${esc(p.descripcion)}</p>` : ""}
         <div class="box">
@@ -94,7 +96,11 @@ function open(id) {
   draw();
   $("#sheet").onclick = async e => {
     const s = e.target.closest("[data-s]:not(:disabled)");
-    if (s) { talla = talla === s.dataset.s ? "" : s.dataset.s; draw(); return; }
+    if (s) {
+      talla = talla === s.dataset.s ? "" : s.dataset.s; draw();
+      $(`#sheet [data-s="${CSS.escape(s.dataset.s)}"]`).focus(); // no perder el foco al redibujar
+      return;
+    }
     const c = e.target.closest("#copy");
     if (c) {
       try { await navigator.clipboard.writeText(c.dataset.msg); c.textContent = "Copiado"; }
@@ -102,6 +108,8 @@ function open(id) {
     }
   };
   if (!$("#dlg").open) $("#dlg").showModal();
+  $("#dlg").scrollTop = $("#sheet").scrollTop = 0;
+  if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
 }
 
 document.addEventListener("click", e => {
@@ -111,5 +119,11 @@ document.addEventListener("click", e => {
 });
 $("#close").onclick = () => $("#dlg").close();
 $("#dlg").addEventListener("click", e => { if (e.target === $("#dlg")) $("#dlg").close(); });
+// Enlace directo a un modelo: tusitio.com/#<ID>
+$("#dlg").addEventListener("close", () => {
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+});
+const desdeHash = () => { const id = decodeURIComponent(location.hash.slice(1)); if (id) open(id); };
+window.addEventListener("hashchange", desdeHash);
 
-chips(); render();
+chips(); render(); desdeHash();

@@ -90,6 +90,32 @@ def texto(v):
     return str(v).strip() if v is not None else ""
 
 
+CONECTORES = {"con", "de", "del", "y"}
+
+
+def limpiar_modelo(modelo, marca):
+    """Ordena el nombre del modelo para la web.
+
+    - Corrige la marca mal escrita al inicio ("Louis Vuiton blanca").
+    - Quita la marca repetida al inicio ("Jordan Retro 8 Aqua" → "Retro 8 Aqua"),
+      salvo que lo que queda empiece con número ("Jordan 1 …" se mantiene).
+    - Unifica mayúsculas: "AF1 BLANCA" → "AF1 Blanca", "blanca" → "Blanca".
+      Las siglas cortas (TN, KNU, SE, BN…) se mantienen.
+    """
+    bajo = modelo.lower()
+    for alias in sorted([*MARCAS, marca.lower()], key=len, reverse=True):
+        if MARCAS.get(alias, marca) == marca and (bajo == alias or bajo.startswith(alias + " ")):
+            resto = modelo[len(alias):].strip()
+            modelo = resto if resto and not resto[0].isdigit() else marca + (" " + resto if resto else "")
+            break
+    palabras = []
+    for i, w in enumerate(modelo.split()):
+        if w.isalpha() and (w.islower() or (w.isupper() and len(w) >= 4) or w.lower() in CONECTORES):
+            w = w.lower() if i and w.lower() in CONECTORES else w.capitalize()
+        palabras.append(w)
+    return " ".join(palabras)
+
+
 def clave_talla(t):
     try:
         return (0, float(t.replace(",", ".")))
@@ -120,7 +146,7 @@ def main():
         p = productos.setdefault(id_, {
             "id": id_,
             "marca": marca,
-            "modelo": texto(col(fila, "modelo")),
+            "modelo": limpiar_modelo(texto(col(fila, "modelo")), marca),
             "precio": numero(col(fila, "precio")),
             "tallas": {},
         })

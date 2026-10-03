@@ -14,6 +14,9 @@ Esto reescribe `inventario.js` con modelos, precios, tallas y stock. Usa la hoja
 (columnas ID, Marca, Modelo, Precio, Talla, Stock). **No se publican** la hoja *Pedidos*
 ni las columnas *Código* y *Notas*. El Excel en sí está excluido de git (`.gitignore`).
 
+El script también ordena los nombres para la web: corrige mayúsculas ("AF1 BLANCA" → "AF1 Blanca")
+y quita la marca repetida al inicio del modelo ("Jordan Retro 8 Aqua" → "Retro 8 Aqua").
+
 ## Configurar
 En **`config.js`**:
 - `TIENDA`: nombre, eslogan, WhatsApp (con código de país, sin `+`), Instagram.
@@ -23,7 +26,7 @@ En **`config.js`**:
 Guarda la foto de cada modelo como `img/<ID>.jpg` (ver `img/LEEME.txt`).
 
 ## Qué hace el catálogo
-- Muestra solo tallas con stock; los modelos sin stock salen como **Agotado** (ocultos por defecto).
+- Muestra solo los modelos con stock; en la ficha, las tallas agotadas salen tachadas.
 - Filtros por talla y marca; los modelos más nuevos aparecen primero.
 - Aviso de **Último par** cuando queda una unidad.
 - En la ficha el cliente elige talla y el botón abre WhatsApp con el mensaje listo

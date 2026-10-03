@@ -6,7 +6,8 @@ Nombre de la foto = ID del modelo en el Excel (columna "ID"):
 Si quieres varias fotos o usar otros nombres, decláralas en config.js (EXTRAS).
 
 Recomendado:
-- Formato .jpg, proporción vertical 4:5 (ej. 1080x1350 px).
+- Formato .jpg, cuadrada 1:1 (ej. 1080x1080 px), con la zapatilla centrada:
+  la grilla recorta las fotos a un cuadrado.
 - Menos de ~300 KB cada una (puedes comprimirlas en https://squoosh.app).
 
-Si falta una foto, el catálogo muestra la inicial de la marca.
+Si falta una foto, el catálogo muestra el nombre de la marca en su lugar.

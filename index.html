@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>EURODRIP · Zapatillas</title>
   <meta name="description" content="Catálogo de zapatillas EURODRIP: tallas en stock y pedidos por WhatsApp o Instagram.">
+  <meta property="og:title" content="EURODRIP · Zapatillas">
+  <meta property="og:description" content="Sneakers & Streetwear en Antofagasta. Envío a todo Chile. Mira las tallas en stock y pide por WhatsApp.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0b0d11">
+  <link rel="icon" href="img/logo.png">
+  <link rel="apple-touch-icon" href="img/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -16,12 +22,12 @@
   <header>
     <h1 class="brand" id="brand"></h1>
     <div class="head-info">
-    <p class="pago" id="pago"></p>
-    <div class="meta">
-      <span id="eslogan"></span>
-      <span id="stamp"></span>
-      <span id="links"></span>
-    </div>
+      <p class="pago" id="pago"></p>
+      <div class="meta">
+        <span id="eslogan"></span>
+        <span id="stamp"></span>
+        <span id="links"></span>
+      </div>
     </div>
   </header>
 
@@ -40,14 +46,13 @@
   </footer>
 </div>
 
-<dialog id="dlg" aria-label="Detalle del modelo">
+<dialog id="dlg" aria-labelledby="dlg-t">
   <button class="x" id="close" aria-label="Cerrar">×</button>
   <div class="sheet" id="sheet"></div>
 </dialog>
 
-
-  <script src="config.js"></script>
-  <script src="inventario.js"></script>
-  <script src="app.js"></script>
+<script src="config.js"></script>
+<script src="inventario.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

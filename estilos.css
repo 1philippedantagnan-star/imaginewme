@@ -71,12 +71,15 @@ header.con-logo .meta{margin-top:8px}
 
 /* Ficha */
 dialog{border:0;padding:0;border-radius:12px;background:var(--card);color:var(--ink);
-  width:min(880px,calc(100% - 24px));max-height:calc(100dvh - 24px)}
+  width:min(880px,calc(100% - 24px));max-width:none;max-height:calc(100dvh - 24px);overflow:hidden}
+/* Solo la ficha hace scroll: el botón cerrar queda siempre a la vista */
+dialog[open]{display:flex;flex-direction:column}
 dialog::backdrop{background:rgb(5 7 12 / .6)}
-.sheet{display:grid}
+body:has(dialog[open]){overflow:hidden}
+.sheet{display:grid;grid-auto-rows:max-content;overflow-y:auto;min-height:0;overscroll-behavior:contain}
 @media(min-width:760px){.sheet{grid-template-columns:1fr 1fr}}
 .sheet .pic{aspect-ratio:4/3}
-@media(min-width:760px){.sheet .pic{aspect-ratio:1}}
+@media(min-width:760px){.sheet .pic{aspect-ratio:auto;min-height:420px}}
 .sheet .mark{font-size:clamp(2.4rem,10vw,4rem)}
 .det{padding:22px;display:grid;gap:14px;align-content:start}
 .det h2{font-family:var(--display);font-stretch:75%;font-weight:800;font-size:1.9rem;line-height:1;margin:0;text-transform:uppercase;text-wrap:balance}

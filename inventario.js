@@ -1,6 +1,6 @@
 // ARCHIVO GENERADO por actualizar_catalogo.py — no lo edites a mano.
 // Origen: inv.xlsx · 2026-09-24 22:47
-const ACTUALIZADO = "24-09-2026";
+const ACTUALIZADO = "21-10-2026";
 const INVENTARIO = [
   {"id": "p1790168211393", "marca": "Jordan", "modelo": "Retro Ring Gris", "precio": 85000, "tallas": [{"talla": "40", "stock": 1}, {"talla": "42", "stock": 1}]},
   {"id": "p1790168255743", "marca": "Jordan", "modelo": "Retro 3 Tinker Negra", "precio": 85000, "tallas": [{"talla": "44", "stock": 2}]},
@@ -9,7 +9,7 @@ const INVENTARIO = [
   {"id": "p1790168366061", "marca": "Jordan", "modelo": "Retro 4 Black Cat 2026", "precio": 85000, "tallas": [{"talla": "40", "stock": 1}]},
   {"id": "p1790168888140", "marca": "Nike", "modelo": "Glide Blanca", "precio": 85000, "tallas": [{"talla": "40", "stock": 1}]},
   {"id": "p1790168935669", "marca": "Nike", "modelo": "TN Negras", "precio": 85000, "tallas": [{"talla": "40", "stock": 1}, {"talla": "41", "stock": 1}, {"talla": "43", "stock": 1}]},
-  {"id": "p1790169011436", "marca": "Nike", "modelo": "AF1 BLANCA", "precio": 70000, "tallas": [{"talla": "36", "stock": 5}, {"talla": "37", "stock": 6}, {"talla": "38", "stock": 6}, {"talla": "39", "stock": 6}, {"talla": "40", "stock": 14}, {"talla": "41", "stock": 18}, {"talla": "42", "stock": 9}, {"talla": "43", "stock": 6}, {"talla": "44", "stock": 7}]},
+  {"id": "p1790169011436", "marca": "Nike", "modelo": "AF1 BLANCA", "precio": 70000, "tallas": [{"talla": "36", "stock": 11}, {"talla": "37", "stock": 15}, {"talla": "38", "stock": 15}, {"talla": "39", "stock": 15}, {"talla": "40", "stock": 23}, {"talla": "41", "stock": 27}, {"talla": "42", "stock": 18}, {"talla": "43", "stock": 15}, {"talla": "44", "stock": 10}]},
   {"id": "p1790169120657", "marca": "Vans", "modelo": "KNU NEGRA", "precio": 75000, "tallas": [{"talla": "42", "stock": 1}]},
   {"id": "p1790169165283", "marca": "Adidas", "modelo": "Samba Plata", "precio": 65000, "tallas": [{"talla": "36", "stock": 1}]},
   {"id": "p1790169184923", "marca": "Adidas", "modelo": "Samba Leo", "precio": 65000, "tallas": [{"talla": "36", "stock": 1}]},
